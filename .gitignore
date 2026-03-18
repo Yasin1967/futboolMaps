@@ -1,0 +1,38 @@
+## [ASP.NET Core]
+bin/
+obj/
+/out/
+.vscode/
+.vs/
+*.user
+*.userosscache
+*.sln.doccache
+*.suo
+*.user
+*.pdb
+*.suo
+*.user
+*.userosscache
+*.sln.doccache
+*.suo
+
+## [Web Assets]
+node_modules/
+.sass-cache/
+dist/
+
+## [OS]
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+## [Temporary]
+/tmp/
+*.log
+.gemini/
+.agent/
+.agents/
+brain/
+implementation_plan.md
+task.md
+walkthrough.md
