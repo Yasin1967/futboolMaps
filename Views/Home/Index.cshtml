@@ -1,0 +1,194 @@
+@{
+    ViewData["Title"] = "FootballMaps - Türkiye";
+}
+
+<div class="row g-3">
+    <!-- Interactive Map -->
+    <div class="col-lg-7 col-map">
+        <div class="map-card">
+            <div class="map-card-header">
+                <i class="bi bi-geo-alt-fill"></i>
+                <h5>Türkiye Futbol Haritası</h5>
+            </div>
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <!-- City Detail Panel -->
+    <div class="col-lg-5 col-detail">
+        <div class="detail-panel">
+            <div class="detail-header">
+                <h5 id="cityNameHeader"><i class="bi bi-buildings"></i> Şehir Seçiniz</h5>
+            </div>
+            <div class="detail-body">
+                <!-- Initial state -->
+                <div id="initialMessage" class="initial-msg">
+                    <div class="icon-circle">
+                        <i class="bi bi-cursor-fill"></i>
+                    </div>
+                    <p>Harita üzerinden bir şehre tıklayarak detaylı bilgilere ulaşabilirsiniz.</p>
+                </div>
+
+                <!-- City data (hidden initially) -->
+                <div id="cityContent" class="d-none fade-in-up">
+                    <!-- History -->
+                    <div class="mb-4">
+                        <div class="section-title">
+                            <i class="bi bi-book-fill"></i> Tarihçe & Kültür
+                        </div>
+                        <p id="cityHistory" class="info-primary"></p>
+                        <p id="cityCulture" class="info-secondary"></p>
+                    </div>
+
+                    <!-- Food & Nature -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="section-title">
+                                <i class="bi bi-cup-hot-fill"></i> Lezzetler
+                            </div>
+                            <p id="cityFood" class="info-detail"></p>
+                        </div>
+                        <div class="col-6">
+                            <div class="section-title">
+                                <i class="bi bi-tree-fill"></i> Doğa
+                            </div>
+                            <p id="cityNature" class="info-detail"></p>
+                        </div>
+                    </div>
+
+                    <!-- Teams -->
+                    <div>
+                        <div class="section-title">
+                            <i class="bi bi-trophy-fill"></i> Takımlar
+                        </div>
+                        <div id="teamsContainer" class="row g-2 mt-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin="" />
+}
+
+@section Scripts {
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Dark-themed map
+            const map = L.map('map', {
+                center: [39.0, 35.5],
+                zoom: 6,
+                minZoom: 5,
+                maxZoom: 10,
+                zoomControl: true
+            });
+
+            // Dark tile layer (CartoDB Dark Matter)
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>'
+            }).addTo(map);
+
+            // Real coordinates for each city
+            const cities = [
+                { id: 34, name: 'İstanbul',  lat: 41.0082, lon: 28.9784 },
+                { id: 6,  name: 'Ankara',    lat: 39.9334, lon: 32.8597 },
+                { id: 35, name: 'İzmir',     lat: 38.4192, lon: 27.1287 },
+                { id: 16, name: 'Bursa',     lat: 40.1885, lon: 29.0610 },
+                { id: 61, name: 'Trabzon',   lat: 41.0027, lon: 39.7168 }
+            ];
+
+            const createIcon = () => L.divIcon({
+                className: 'city-marker-icon',
+                iconSize: [16, 16],
+                iconAnchor: [8, 8],
+                popupAnchor: [0, -12]
+            });
+
+            const markers = [];
+            let activeMarker = null;
+            const cityContent = document.getElementById('cityContent');
+            const initialMessage = document.getElementById('initialMessage');
+
+            cities.forEach(city => {
+                const marker = L.marker([city.lat, city.lon], {
+                    icon: createIcon(),
+                    title: city.name
+                }).addTo(map);
+
+                marker.bindTooltip(city.name, {
+                    permanent: true,
+                    direction: 'bottom',
+                    offset: [0, 10],
+                    className: 'city-label-tooltip'
+                });
+
+                marker.cityId = city.id;
+                markers.push(marker);
+
+                marker.on('click', function () {
+                    if (activeMarker) {
+                        activeMarker.getElement().classList.remove('active');
+                    }
+                    this.getElement().classList.add('active');
+                    activeMarker = this;
+
+                    // Smooth pan to city
+                    map.flyTo([city.lat, city.lon], 7, { duration: 0.8 });
+
+                    fetch('/Home/GetCityDetails/' + this.cityId)
+                        .then(r => {
+                            if (!r.ok) throw new Error('fetch failed');
+                            return r.json();
+                        })
+                        .then(data => {
+                            initialMessage.classList.add('d-none');
+                            cityContent.classList.remove('d-none');
+
+                            // Re-trigger animation
+                            cityContent.style.animation = 'none';
+                            cityContent.offsetHeight; // reflow
+                            cityContent.style.animation = '';
+
+                            document.getElementById('cityNameHeader').innerHTML =
+                                '<i class="bi bi-buildings"></i> ' + data.name;
+                            document.getElementById('cityHistory').textContent = data.history;
+                            document.getElementById('cityCulture').textContent = data.culture;
+                            document.getElementById('cityFood').textContent = data.localFood;
+                            document.getElementById('cityNature').textContent = data.naturalResources;
+
+                            const tc = document.getElementById('teamsContainer');
+                            tc.innerHTML = '';
+
+                            if (data.teams && data.teams.length > 0) {
+                                data.teams.forEach(team => {
+                                    const col = document.createElement('div');
+                                    col.className = 'col-6';
+                                    col.innerHTML = `
+                                        <div class="team-card">
+                                            <img src="${team.logoUrl}" alt="${team.name}" class="team-logo"
+                                                 onerror="this.style.display='none'"/>
+                                            <div class="team-name" title="${team.name}">${team.name}</div>
+                                            <div class="team-year">${team.foundationYear}</div>
+                                        </div>`;
+                                    tc.appendChild(col);
+                                });
+                            } else {
+                                tc.innerHTML = '<div class="col-12"><p class="info-secondary text-center">Takım bulunamadı.</p></div>';
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Error:', err);
+                        });
+                });
+            });
+        });
+    </script>
+}
