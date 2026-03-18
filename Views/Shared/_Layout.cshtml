@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FootballMaps</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <nav class="navbar navbar-custom">
+        <div class="container-fluid px-3 px-md-4">
+            <a class="navbar-brand navbar-brand-custom" asp-area="" asp-controller="Home" asp-action="Index">
+                <span class="brand-icon">⚽</span>
+                FootballMaps
+            </a>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        @RenderBody()
+    </div>
+
+    <footer class="footer-custom">
+        <div class="container-fluid">
+            © 2026 <strong>FootballMaps</strong> — Türkiye Futbol Haritası
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
