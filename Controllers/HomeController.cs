@@ -22,6 +22,7 @@ public class HomeController : Controller
     }
 
     [HttpGet]
+    // 4. Hafta: Şehir detaylarını AJAX ile getiren servis yapısı kuruldu.
     public async Task<IActionResult> GetCityDetails(int id)
     {
         var city = await _context.Cities
