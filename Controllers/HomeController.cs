@@ -52,6 +52,19 @@ public class HomeController : Controller
         return Json(result);
     }
 
+    // 5. Hafta: Şehir detaylarını ayrı bir sayfada gösteren view yapısı eklendi.
+    public async Task<IActionResult> CityDetails(int id)
+    {
+        var city = await _context.Cities
+            .Include(c => c.Teams)
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+        if (city == null)
+            return NotFound();
+
+        return View(city);
+    }
+
     public IActionResult Privacy()
     {
         return View();

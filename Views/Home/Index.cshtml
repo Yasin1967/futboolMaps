@@ -2,69 +2,22 @@
     ViewData["Title"] = "FootballMaps - Türkiye";
 }
 
-<div class="row g-3">
-    <!-- Interactive Map -->
-    <div class="col-lg-7 col-map">
-        <div class="map-card">
-            <div class="map-card-header">
-                <i class="bi bi-geo-alt-fill"></i>
-                <h5>Türkiye Futbol Haritası</h5>
-            </div>
-            <div id="map"></div>
-        </div>
-    </div>
-
-    <!-- City Detail Panel -->
-    <div class="col-lg-5 col-detail">
-        <div class="detail-panel">
-            <div class="detail-header">
-                <h5 id="cityNameHeader"><i class="bi bi-buildings"></i> Şehir Seçiniz</h5>
-            </div>
-            <div class="detail-body">
-                <!-- Initial state -->
-                <div id="initialMessage" class="initial-msg">
-                    <div class="icon-circle">
-                        <i class="bi bi-cursor-fill"></i>
+<div class="row g-0">
+    <!-- Interactive Map (Full Width) -->
+    <div class="col-12">
+        <div class="map-card border-0 rounded-4 shadow-lg overflow-hidden">
+            <div class="map-card-header bg-gradient bg-primary border-0 py-3 px-4">
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-geo-alt-fill fs-5"></i>
+                        <h5 class="mb-0 fw-bold">Türkiye Futbol Haritası</h5>
                     </div>
-                    <p>Harita üzerinden bir şehre tıklayarak detaylı bilgilere ulaşabilirsiniz.</p>
-                </div>
-
-                <!-- City data (hidden initially) -->
-                <div id="cityContent" class="d-none fade-in-up">
-                    <!-- History -->
-                    <div class="mb-4">
-                        <div class="section-title">
-                            <i class="bi bi-book-fill"></i> Tarihçe & Kültür
-                        </div>
-                        <p id="cityHistory" class="info-primary"></p>
-                        <p id="cityCulture" class="info-secondary"></p>
-                    </div>
-
-                    <!-- Food & Nature -->
-                    <div class="row g-3 mb-4">
-                        <div class="col-6">
-                            <div class="section-title">
-                                <i class="bi bi-cup-hot-fill"></i> Lezzetler
-                            </div>
-                            <p id="cityFood" class="info-detail"></p>
-                        </div>
-                        <div class="col-6">
-                            <div class="section-title">
-                                <i class="bi bi-tree-fill"></i> Doğa
-                            </div>
-                            <p id="cityNature" class="info-detail"></p>
-                        </div>
-                    </div>
-
-                    <!-- Teams -->
-                    <div>
-                        <div class="section-title">
-                            <i class="bi bi-trophy-fill"></i> Takımlar
-                        </div>
-                        <div id="teamsContainer" class="row g-2 mt-1"></div>
-                    </div>
+                    <span class="badge bg-white bg-opacity-10 text-white fw-normal px-3 py-2 rounded-pill small">
+                        <i class="bi bi-info-circle me-1"></i> Şehre tıklayarak detaylı bilgiye ulaşın
+                    </span>
                 </div>
             </div>
+            <div id="map" style="height: calc(100vh - 180px); min-height: 500px;"></div>
         </div>
     </div>
 </div>
@@ -109,13 +62,11 @@
                 className: 'city-marker-icon',
                 iconSize: [16, 16],
                 iconAnchor: [8, 8],
-                popupAnchor: [0, -12]
+                popupAnchor: [0, -12],
+                html: '<div class="marker-dot"></div>'
             });
 
             const markers = [];
-            let activeMarker = null;
-            const cityContent = document.getElementById('cityContent');
-            const initialMessage = document.getElementById('initialMessage');
 
             cities.forEach(city => {
                 const marker = L.marker([city.lat, city.lon], {
@@ -134,59 +85,13 @@
                 markers.push(marker);
 
                 marker.on('click', function () {
-                    if (activeMarker) {
-                        activeMarker.getElement().classList.remove('active');
-                    }
-                    this.getElement().classList.add('active');
-                    activeMarker = this;
+                    // Brief visual flash on click
+                    const el = this.getElement();
+                    el.classList.add('clicked');
+                    setTimeout(() => el.classList.remove('clicked'), 300);
 
-                    // Smooth pan to city
-                    map.flyTo([city.lat, city.lon], 7, { duration: 0.8 });
-
-                    fetch('/Home/GetCityDetails/' + this.cityId)
-                        .then(r => {
-                            if (!r.ok) throw new Error('fetch failed');
-                            return r.json();
-                        })
-                        .then(data => {
-                            initialMessage.classList.add('d-none');
-                            cityContent.classList.remove('d-none');
-
-                            // Re-trigger animation
-                            cityContent.style.animation = 'none';
-                            cityContent.offsetHeight; // reflow
-                            cityContent.style.animation = '';
-
-                            document.getElementById('cityNameHeader').innerHTML =
-                                '<i class="bi bi-buildings"></i> ' + data.name;
-                            document.getElementById('cityHistory').textContent = data.history;
-                            document.getElementById('cityCulture').textContent = data.culture;
-                            document.getElementById('cityFood').textContent = data.localFood;
-                            document.getElementById('cityNature').textContent = data.naturalResources;
-
-                            const tc = document.getElementById('teamsContainer');
-                            tc.innerHTML = '';
-
-                            if (data.teams && data.teams.length > 0) {
-                                data.teams.forEach(team => {
-                                    const col = document.createElement('div');
-                                    col.className = 'col-6';
-                                    col.innerHTML = `
-                                        <div class="team-card">
-                                            <img src="${team.logoUrl}" alt="${team.name}" class="team-logo"
-                                                 onerror="this.style.display='none'"/>
-                                            <div class="team-name" title="${team.name}">${team.name}</div>
-                                            <div class="team-year">${team.foundationYear}</div>
-                                        </div>`;
-                                    tc.appendChild(col);
-                                });
-                            } else {
-                                tc.innerHTML = '<div class="col-12"><p class="info-secondary text-center">Takım bulunamadı.</p></div>';
-                            }
-                        })
-                        .catch(err => {
-                            console.error('Error:', err);
-                        });
+                    // Open detailed city page in a new tab
+                    window.open('/Home/CityDetails/' + city.id, '_blank');
                 });
             });
         });
