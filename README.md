@@ -24,6 +24,7 @@ Her haftanın detaylı raporuna aşağıdaki bağlantılardan ulaşabilirsiniz:
 | **Hafta 3** | [Veri Seeding & Takım Asset Yönetimi](./Raporlar/hafta-3-raporu.md) | .md |
 | **Hafta 4** | [AJAX API & Arka Plan Aracı Mantığı](./Raporlar/hafta-4-raporu.md) | .md |
 | **Hafta 5** | [Premium Harita Entegrasyonu & Mobil Tasarım](./Raporlar/hafta-5-raporu.md) | .md |
+| **Hafta 6** | [6. hafta hedefi olan şehir detay sayfasının dashboard mimarisi ile tasarlanması ve Bootstrap entegrasyonu başarıyla tamamlanmıştır.](./Raporlar/hafta-6-raporu.md) | .md |
 
 ---
 
