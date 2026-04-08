@@ -53,10 +53,3 @@ Hafta 7 kapsamında projeye güvenlik ve veri yönetim katmanı eklenmiştir:
 
 ---
 
-## 🚀 Çalıştırma Talimatları
-1. Depoyu klonlayın.
-2. `dotnet ef database update` ile veritabanını oluşturun.
-3. `dotnet run` ile çalıştırın.
-4. Admin Paneli: `/Account/Login` adresinden giriş yapın.
-   - **E-posta:** `admin@footballmap.com`
-   - **Şifre:** `Admin123!`
