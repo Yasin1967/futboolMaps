@@ -1,0 +1,54 @@
+@model FOOTBALMAPSV2.Models.City
+
+@{
+    ViewData["Title"] = "Yeni Şehir Ekle";
+    Layout = "_AdminLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body p-4">
+                <h5 class="card-title fw-bold mb-4">Şehir Bilgileri</h5>
+                <form asp-action="CreateCity" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+                    <input type="hidden" asp-for="CountryId" value="1" />
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="Id" class="form-label fw-600">Plaka Kodu</label>
+                            <input asp-for="Id" class="form-control rounded-pill" placeholder="Örn: 34" />
+                            <span asp-validation-for="Id" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Name" class="form-label fw-600">Şehir Adı</label>
+                            <input asp-for="Name" class="form-control rounded-pill" placeholder="Örn: İstanbul" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="History" class="form-label fw-600">Tarihçe</label>
+                            <textarea asp-for="History" class="form-control rounded-3" rows="3"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Culture" class="form-label fw-600">Kültür</label>
+                            <input asp-for="Culture" class="form-control rounded-pill" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="NaturalResources" class="form-label fw-600">Doğal Kaynaklar</label>
+                            <input asp-for="NaturalResources" class="form-control rounded-pill" />
+                        </div>
+                        <div class="col-md-12">
+                            <label asp-for="LocalFood" class="form-label fw-600">Yerel Lezzetler</label>
+                            <input asp-for="LocalFood" class="form-control rounded-pill" />
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary rounded-pill px-5">Kaydet</button>
+                        <a asp-action="Cities" class="btn btn-outline-secondary rounded-pill px-4">İptal</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

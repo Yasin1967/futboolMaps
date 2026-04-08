@@ -1,0 +1,58 @@
+@model FOOTBALMAPSV2.Controllers.LoginViewModel
+
+@{
+    ViewData["Title"] = "Giriş Yap";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0 rounded-4" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); color: white;">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">Admin Paneli</h2>
+                    <form asp-action="Login" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">E-posta</label>
+                            <input asp-for="Email" class="form-control bg-transparent text-white border-secondary rounded-pill px-3" placeholder="admin@footballmap.com" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label asp-for="Password" class="form-label">Şifre</label>
+                            <input asp-for="Password" class="form-control bg-transparent text-white border-secondary rounded-pill px-3" placeholder="••••••" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4 form-check">
+                            <input asp-for="RememberMe" class="form-check-input" />
+                            <label asp-for="RememberMe" class="form-check-label">Beni Hatırla</label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold shadow">Giriş Yap</button>
+                    </form>
+                </div>
+            </div>
+            <div class="text-center mt-3 text-secondary small">
+                Varsayılan Admin: admin@footballmap.com / Admin123!
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        min-height: 100vh;
+    }
+    .form-control:focus {
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+</style>

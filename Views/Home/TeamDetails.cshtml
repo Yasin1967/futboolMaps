@@ -1,0 +1,243 @@
+@model FOOTBALMAPSV2.Models.Team
+@{
+    ViewData["Title"] = Model.Name + " - Takım Detayları";
+}
+
+<div class="team-details-container fade-in">
+    <!-- Hero Section -->
+    <div class="team-hero mb-5">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-2">
+                    <li class="breadcrumb-item"><a asp-action="Index">Harita</a></li>
+                    <li class="breadcrumb-item"><a asp-action="CityDetails" asp-route-id="@Model.CityId">@Model.City.Name</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+                </ol>
+            </nav>
+            <div class="d-flex align-items-center gap-4">
+                <div class="team-logo-hero">
+                    <img src="@Model.LogoUrl" alt="@Model.Name Logo" class="img-fluid" 
+                         onerror="this.src='https://via.placeholder.com/150?text=Logo'"/>
+                </div>
+                <div>
+                    <h1 class="display-3 fw-bold mb-0">@Model.Name</h1>
+                    <div class="mt-2 text-white-50">
+                        <span class="me-3"><i class="bi bi-calendar-event me-2"></i>Kuruluş: @Model.FoundationYear</span>
+                        <span><i class="bi bi-geo-alt me-2"></i>@Model.City.Name</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <div class="row g-4">
+            <!-- Left Column: Content -->
+            <div class="col-lg-8">
+                <!-- History Section -->
+                <div class="content-card mb-4">
+                    <div class="card-header-styled">
+                        <i class="bi bi-hourglass-split me-2"></i> Takım Tarihçesi
+                    </div>
+                    <div class="card-body-styled">
+                        @if (!string.IsNullOrEmpty(Model.History))
+                        {
+                            <p class="lead-text">@Model.History</p>
+                        }
+                        else
+                        {
+                            <p class="text-muted italic">Bu takımın tarihçesi henüz eklenmemiş.</p>
+                        }
+                    </div>
+                </div>
+
+                <!-- Achievements Section -->
+                <div class="content-card mb-4">
+                    <div class="card-header-styled bg-warning-soft">
+                        <i class="bi bi-trophy-fill me-2 text-warning"></i> Başarılar ve Kupalar
+                    </div>
+                    <div class="card-body-styled">
+                        @if (!string.IsNullOrEmpty(Model.Achievements))
+                        {
+                            <div class="achievements-list">
+                                @Model.Achievements
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted italic">Henüz başarı bilgisi girilmemiş.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Sidebar -->
+            <div class="col-lg-4">
+                <div class="sticky-top" style="top: 100px; z-index: 10;">
+                    <div class="sidebar-card mb-4">
+                        <div class="sidebar-header">
+                            <i class="bi bi-info-circle-fill me-2"></i> Künye
+                        </div>
+                        <div class="sidebar-body">
+                            <div class="info-row">
+                                <span class="label">Takım İsmi</span>
+                                <span class="value">@Model.Name</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Şehir</span>
+                                <span class="value">@Model.City.Name</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Kuruluş</span>
+                                <span class="value">@Model.FoundationYear</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Bulunduğu Lig</span>
+                                <span class="value">@(Model.League?.Name ?? "Belirtilmemiş")</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cta-card text-center p-4">
+                        <h6>Bu şehre ait diğer takımları gör</h6>
+                        <a asp-action="CityDetails" asp-route-id="@Model.CityId" class="btn btn-outline-primary w-100 mt-3 rounded-pill">
+                            <i class="bi bi-arrow-left me-2"></i> @Model.City.Name Takımları
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary-color: #6366f1;
+        --bg-dark: #0f172a;
+        --card-bg: rgba(30, 41, 59, 0.7);
+        --glass-border: rgba(255, 255, 255, 0.1);
+    }
+
+    .team-details-container {
+        color: #f1f5f9;
+        min-height: 100vh;
+        background: radial-gradient(circle at top left, #1e1b4b, #0f172a);
+    }
+
+    .team-hero {
+        position: relative;
+        height: 350px;
+        background: url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=2000&auto=format&fit=crop') center center;
+        background-size: cover;
+        display: flex;
+        align-items: flex-end;
+        padding-bottom: 3rem;
+        overflow: hidden;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(0deg, #0f172a 0%, rgba(15, 23, 42, 0.4) 100%);
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+        padding: 0 1.5rem;
+    }
+
+    .team-logo-hero {
+        width: 120px;
+        height: 120px;
+        background: white;
+        padding: 15px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .content-card {
+        background: var(--card-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 1.5rem;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+    }
+
+    .card-header-styled {
+        padding: 1.25rem 1.5rem;
+        font-weight: 700;
+        font-size: 1.2rem;
+        background: rgba(255,255,255,0.03);
+        border-bottom: 1px solid var(--glass-border);
+    }
+
+    .bg-warning-soft { background: rgba(245, 158, 11, 0.05); }
+
+    .card-body-styled {
+        padding: 2rem;
+    }
+
+    .lead-text {
+        line-height: 1.8;
+        font-size: 1.1rem;
+        color: #cbd5e1;
+        white-space: pre-wrap;
+    }
+
+    .achievements-list {
+        white-space: pre-wrap;
+        color: #f59e0b;
+        font-weight: 500;
+        font-size: 1.1rem;
+    }
+
+    .sidebar-card {
+        background: var(--card-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 1.5rem;
+        overflow: hidden;
+    }
+
+    .sidebar-header {
+        padding: 1rem 1.5rem;
+        font-weight: 600;
+        background: rgba(255,255,255,0.05);
+        border-bottom: 1px solid var(--glass-border);
+    }
+
+    .sidebar-body {
+        padding: 1.5rem;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .info-row:last-child { border-bottom: none; }
+
+    .info-row .label { color: #94a3b8; font-size: 0.9rem; }
+    .info-row .value { font-weight: 600; }
+
+    .cta-card {
+        background: rgba(99, 102, 241, 0.1);
+        border: 1px dashed var(--primary-color);
+        border-radius: 1.5rem;
+    }
+
+    .fade-in {
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>

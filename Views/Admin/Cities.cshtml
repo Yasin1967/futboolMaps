@@ -1,0 +1,47 @@
+@model IEnumerable<FOOTBALMAPSV2.Models.City>
+
+@{
+    ViewData["Title"] = "Şehir Yönetimi";
+    Layout = "_AdminLayout";
+}
+
+<div class="card shadow-sm border-0 rounded-4">
+    <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-bold">Şehir Listesi</h5>
+        <a asp-action="CreateCity" class="btn btn-primary rounded-pill px-4">
+            <i class="bi bi-plus-circle me-1"></i> Yeni Şehir Ekle
+        </a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">PLAKA</th>
+                        <th>ŞEHİR ADI</th>
+                        <th>TARİHÇE</th>
+                        <th>DESTEK SAYISI</th>
+                        <th class="text-end pe-4">İŞLEMLER</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4 fw-600">@item.Id</td>
+                            <td class="fw-bold">@item.Name</td>
+                            <td class="text-muted small" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@item.History</td>
+                            <td><span class="badge bg-info text-dark rounded-pill px-3">@item.SupportCount</span></td>
+                            <td class="text-end pe-4">
+                                <a asp-action="EditCity" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-pill px-3 me-2">DÜZENLE</a>
+                                <form asp-action="DeleteCity" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Bu şehri silmek istediğinize emin misiniz?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3">SİL</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

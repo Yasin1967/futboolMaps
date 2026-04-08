@@ -78,20 +78,22 @@
                             foreach (var team in Model.Teams)
                             {
                                 <div class="col-md-6">
-                                    <div class="detailed-team-card">
-                                        <div class="team-logo-container">
-                                            <img src="@team.LogoUrl" alt="@team.Name Logo" class="img-fluid" 
-                                                 onerror="this.src='https://via.placeholder.com/100?text=Logo'"/>
-                                        </div>
-                                        <div class="team-info">
-                                            <h4>@team.Name</h4>
-                                            <div class="team-meta">
-                                                <span class="badge bg-primary text-white">Kuruluş: @team.FoundationYear</span>
-                                                <span class="badge bg-secondary">@Model.Name</span>
+                                    <a asp-action="TeamDetails" asp-route-id="@team.Id" class="text-decoration-none text-white">
+                                        <div class="detailed-team-card team-card-clickable">
+                                            <div class="team-logo-container">
+                                                <img src="@team.LogoUrl" alt="@team.Name Logo" class="img-fluid" 
+                                                     onerror="this.src='https://via.placeholder.com/100?text=Logo'"/>
                                             </div>
-                                            <p class="mt-2 text-muted small">Bu takım @Model.Name şehrini profesyonel liglerde temsil etmektedir.</p>
+                                            <div class="team-info">
+                                                <h4>@team.Name</h4>
+                                                <div class="team-meta">
+                                                    <span class="badge bg-primary text-white">Kuruluş: @team.FoundationYear</span>
+                                                    <span class="badge bg-secondary">@Model.Name</span>
+                                                </div>
+                                                <p class="mt-2 text-muted small mb-0">Detayları görmek için tıklayın...</p>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
                             }
                         }
@@ -242,6 +244,14 @@
         display: flex;
         align-items: center;
         gap: 1.5rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .team-card-clickable:hover {
+        background: rgba(99, 102, 241, 0.15);
+        border-color: var(--primary-color);
+        transform: scale(1.02);
+        box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
     }
 
     .team-logo-container {

@@ -1,0 +1,51 @@
+@model IEnumerable<FOOTBALMAPSV2.Models.Team>
+
+@{
+    ViewData["Title"] = "Takım Yönetimi";
+    Layout = "_AdminLayout";
+}
+
+<div class="card shadow-sm border-0 rounded-4">
+    <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-bold">Takım Listesi</h5>
+        <a asp-action="CreateTeam" class="btn btn-primary rounded-pill px-4">
+            <i class="bi bi-plus-circle me-1"></i> Yeni Takım Ekle
+        </a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Logo</th>
+                        <th>TAKIM ADI</th>
+                        <th>ŞEHİR</th>
+                        <th>LİG</th>
+                        <th>KURULUŞ</th>
+                        <th class="text-end pe-4">İŞLEMLER</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <img src="@item.LogoUrl" alt="@item.Name" height="35" style="object-fit: contain;" />
+                            </td>
+                            <td class="fw-bold">@item.Name</td>
+                            <td>@item.City?.Name</td>
+                            <td><span class="badge bg-primary rounded-pill">@item.League?.Name</span></td>
+                            <td>@item.FoundationYear</td>
+                            <td class="text-end pe-4">
+                                <a asp-action="EditTeam" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-pill px-3 me-2">DÜZENLE</a>
+                                <form asp-action="DeleteTeam" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Bu takımı silmek istediğinize emin misiniz?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3">SİL</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

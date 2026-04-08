@@ -16,9 +16,10 @@ public class HomeController : Controller
         _context = context;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var cities = await _context.Cities.ToListAsync();
+        return View(cities);
     }
 
     [HttpGet]
@@ -63,6 +64,19 @@ public class HomeController : Controller
             return NotFound();
 
         return View(city);
+    }
+
+    public async Task<IActionResult> TeamDetails(int id)
+    {
+        var team = await _context.Teams
+            .Include(t => t.City)
+            .Include(t => t.League)
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+        if (team == null)
+            return NotFound();
+
+        return View(team);
     }
 
     public IActionResult Privacy()

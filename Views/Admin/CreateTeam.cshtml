@@ -1,0 +1,68 @@
+@model FOOTBALMAPSV2.Models.Team
+
+@{
+    ViewData["Title"] = "Yeni Takım Ekle";
+    Layout = "_AdminLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body p-4">
+                <h5 class="card-title fw-bold mb-4">Takım Bilgileri</h5>
+                <form asp-action="CreateTeam" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label asp-for="Name" class="form-label fw-600">Takım Adı</label>
+                            <input asp-for="Name" class="form-control rounded-pill" placeholder="Örn: Galatasaray" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="FoundationYear" class="form-label fw-600">Kuruluş Yılı</label>
+                            <input asp-for="FoundationYear" class="form-control rounded-pill" placeholder="1905" />
+                            <span asp-validation-for="FoundationYear" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <label for="logoFile" class="form-label fw-600">Takım Logosu</label>
+                            <input type="file" name="logoFile" id="logoFile" class="form-control rounded-pill" accept="image/*" />
+                            <div class="form-text text-muted small">Veya logo URL'sini aşağıya girebilirsiniz (isteğe bağlı).</div>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="LogoUrl" class="form-label fw-600 small">Logo URL</label>
+                            <input asp-for="LogoUrl" class="form-control rounded-pill btn-sm" placeholder="/images/teams/logo.png" />
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="History" class="form-label fw-600">Takım Tarihçesi</label>
+                            <textarea asp-for="History" class="form-control rounded-3" rows="4" placeholder="Takımın kuruluş hikayesi ve tarihçesi..."></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Achievements" class="form-label fw-600">Başarılar</label>
+                            <textarea asp-for="Achievements" class="form-control rounded-3" rows="3" placeholder="Kazanılan kupalar, dereceler..."></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="CityId" class="form-label fw-600">Şehir</label>
+                            <select asp-for="CityId" class="form-select rounded-pill" asp-items="@(new SelectList(ViewBag.Cities, "Id", "Name"))">
+                                <option value="">Şehir Seçiniz...</option>
+                            </select>
+                            <span asp-validation-for="CityId" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="LeagueId" class="form-label fw-600">Lig</label>
+                            <select asp-for="LeagueId" class="form-select rounded-pill" asp-items="@(new SelectList(ViewBag.Leagues, "Id", "Name"))">
+                                <option value="">Lig Seçiniz...</option>
+                            </select>
+                            <span asp-validation-for="LeagueId" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary rounded-pill px-5">Kaydet</button>
+                        <a asp-action="Teams" class="btn btn-outline-secondary rounded-pill px-4">İptal</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
