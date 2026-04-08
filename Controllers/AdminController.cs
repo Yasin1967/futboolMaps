@@ -90,6 +90,11 @@ namespace FOOTBALMAPSV2.Controllers
 
             if (ModelState.IsValid)
             {
+                // Koordinatları CityCoordinateHelper'dan yeniden hesapla
+                var coords = CityCoordinateHelper.GetCoordinates(city.Id);
+                city.Latitude = coords.Lat;
+                city.Longitude = coords.Lon;
+
                 _context.Update(city);
                 await _context.SaveChangesAsync();
                 TempData["Success"] = "Şehir başarıyla güncellendi.";

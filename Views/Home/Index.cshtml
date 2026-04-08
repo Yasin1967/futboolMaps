@@ -68,7 +68,7 @@
 
             const markers = [];
 
-            cities.forEach(city => {
+            cities.filter(city => city.lat !== 0 && city.lon !== 0).forEach(city => {
                 const marker = L.marker([city.lat, city.lon], {
                     icon: createIcon(),
                     title: city.name
